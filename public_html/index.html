@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Automata de pila</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="favico.png">    
+        <script src="jquery-3.3.1.min.js" type="text/javascript"></script>
+        <script src="go.js" type="text/javascript"></script>
+       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+       <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>-->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+        <script src="index.js" type="text/javascript"></script>
+        <script src="Estado.js" type="text/javascript"></script>
+        <script src="Transicion.js" type="text/javascript"></script>
+        <style>
+            .textito{
+                width: 300px;                
+            }
+        </style>
+    </head>
+    <body>
+
+
+        <div class="row">
+            <div class="col-md-1">            
+            </div>
+            <div class="col-2">  
+                <br>
+                <br>
+                <br>
+                <ol class="breadcrumb">
+                    <li><h5>Referencia: </h5>-Estado inicial: en <span class="badge badge-warning">amarillo</span><br>
+                        -Estado final: con <strong>contorno grueso</strong></li>
+                </ol>
+            </div>            
+            <div class="col-md-6">
+                <div id="myDiagramDiv" style="border: solid 0px blue; width:auto; height:300px"></div>
+            </div>
+            <div class="col-md-2">
+                <br>
+                <br>
+                <br>
+                <div class="breadcrumb">
+                    <label for="descargar">Descargar automata</label>
+                    <a id="descargar" class="btn btn-secondary" role="button" >Descargar</a>                              
+                    
+                    <label for="cargar">Cargar automata</label>
+                    <form>
+                        <input id="cargar" type="file" name="pic" accept=".json" onchange="processFiles(this.files)">                    
+                    </form>
+                </div>
+
+            </div>
+            <div class="col-md-1">            
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <select class="form-control" id="selectEstadoOrigen" >
+                    <option value="" selected disabled>Estado de origen</option>
+                    <option data-toggle="modal" data-target="#modalEstado" value="Añadir estado...">Añadir estado...</option>
+                </select>
+            </div>
+            <div class="col-">
+                <h3>(</h3>
+            </div>
+            <div class="col">
+                <select class="form-control" id="selectCaracterCinta" >
+                    <option value="" selected disabled>Caracter de cinta</option>
+                    <option data-toggle="modal" data-target="#modalCinta">Añadir caracter de cinta...</option>
+                </select>
+            </div>
+            <div class="col-">
+                <h3>,</h3>
+            </div>
+            <div class="col">
+                <select class="form-control" id="selectCaracterLecturaPila" >
+                    <option value="" selected disabled>Caracter de pila lectura</option>
+                    <option data-toggle="modal" data-target="#modalPila">Añadir caracter de pila...</option>
+                    <option>λ</option>
+                    <option>Z0</option>
+                </select>
+            </div>
+            <div class="col-">
+                <h3>/</h3>
+            </div>
+            <div class="col">
+                <select class="form-control" id="selectCaracterEscrituraPila" >
+                    <option value="" selected disabled>Caracter de pila de escritura</option>
+                    <option data-toggle="modal" data-target="#modalPila">Añadir caracter de pila...</option>
+                    <option>λ</option>
+                    <option>Z0</option>
+                </select>
+            </div>
+            <div class="col-">
+                <h3>)</h3>
+            </div>
+            <div class="col">
+                <select class="form-control" id="selectEstadoDestino" >
+                    <option value="" selected disabled>Estado de destino</option>
+                    <option data-toggle="modal" data-target="#modalEstado">Añadir estado...</option>
+                </select>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-primary" onclick="agregarTranscion()" >Agregar transicion</button>
+            </div>
+        </div>
+
+        <!-- Modales -->
+        <!-- Añadir estado-->
+        <div class="modal fade" id="modalEstado" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Añadir estado</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="checkInicial">
+                            <label class="form-check-label" for="checkInicial">Estado inicial</label>                            
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="checkFinal">
+                            <label class="form-check-label" for="checkFinal">Estado final</label>
+                        </div>                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="addEstado()" data-dismiss="modal">Añadir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Añadir caracter de cinta-->
+        <div class="modal fade" id="modalCinta" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Añadir caracter de cinta</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control" id="inputCaracterCinta" maxlength="1" placeholder="Escriba su caracter de cinta">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="addCaracterCinta()" data-dismiss="modal">Añadir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Añadir caracter de pila-->
+        <div class="modal fade" id="modalPila" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Añadir caracter de pila</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control" id="inputCaracterPila" placeholder="Escriba su caracter de pila">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="addCaracterPila()" data-dismiss="modal">Añadir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <br>
+        <div align="center">
+            <p>Ingrese la tira para averiguar si es aceptada por el automata</p>
+            <div align="center">
+                <input style="display: inline-block" type="text" class="form-control textito" id="inputTira" placeholder="Escriba su tira de caracteres">
+                <button style="display: inline-block" type="button" class="btn btn-primary" onclick="probarTira()" data-toggle="modal" data-target="#modalResultados">Probar tira</button>
+            </div>
+            <h3 id="textInforme"></h3>
+            <div id="btnMostrarAvance" style="display: none;">
+                <button type="button" class="btn" onclick="mostrarAvance()">Avanzar un paso en ejecución</button>                
+            </div>
+
+        </div>
+
+
+    </body>
+</html>
